@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Question from './Question';
 import Result from './Result';
+import ProgressBar from './prograssBar';
 import './Quiz.css';
+
 
 const questions = [
     {
@@ -64,12 +66,17 @@ function Quiz() {
     const [answers, setAnswers] = useState(Array(questions.length).fill(null));
     const [showResult, setShowResult] = useState(false);
     const [score, setScore] = useState(0);
+    const [clicked, setClicked] = useState(Array(questions.length).fill(false));
 
     const handleAnswerOptionClick = (questionIndex, isCorrect) => {
         const newAnswers = [...answers];
         newAnswers[questionIndex] = isCorrect;
         setAnswers(newAnswers);
+        const updatedClicked =[...clicked]
+        updatedClicked[questionIndex]=true;
+        setClicked(updatedClicked)
     };
+
 
     const handleSubmit = () => {
         const newScore = answers.filter((answer) => answer === true).length;
@@ -82,7 +89,9 @@ function Quiz() {
             {showResult ? (
                 <Result score={score} totalQuestions={questions.length} />
             ) : (
+                
                 <div>
+                    <ProgressBar SubmitAction={handleSubmit} clickedArray={clicked}/>
                     {questions.map((question, index) => (
                         <Question
                             key={index}
